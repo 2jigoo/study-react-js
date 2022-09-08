@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react'
 
-const User = ({ user, onRemove, onToggle }) => {
+// 19. React.memo
+const User = React.memo(function User({ user, onRemove, onToggle }) {
 
     // # 16. useEffect
     // 미지정: 재렌더링
     // []: 마운트 / 언마운트
     // [ item1, ... ]: 마운트 / 언마운트 / 해당 값이 변경될 때 / 변경되기 직전 
-    useEffect(() => {
+    /* useEffect(() => {
         console.log('user값이 설정됨');
         return () => {
             console.log('user가 바뀌기 전');
         }
-    }, [user]);
+    }, [user]); */
 
     return (
         <div>
@@ -28,7 +29,7 @@ const User = ({ user, onRemove, onToggle }) => {
             <button onClick={() => onRemove(user.id)}>삭제</button>
         </div>
     );
-}
+});
 
 
 const UserList = ({ users, onRemove, onToggle }) => {
@@ -44,4 +45,4 @@ const UserList = ({ users, onRemove, onToggle }) => {
 }
 
 
-export default UserList;
+export default React.memo(UserList);

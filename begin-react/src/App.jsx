@@ -21,14 +21,14 @@ function App() {
 
   const { username, email } = inputs;
   
-  const onChange = e => {
+  const onChange = useCallback(e => {
     const { name, value } = e.target;
     console.log(name + ' ' + value);
-    setInputs({
+    setInputs(inputs => ({
       ...inputs,
       [name]: value
-    });
-  }
+    }));
+  }, []);
 
   const [users, setUsers] = useState([
     {
@@ -73,29 +73,31 @@ function App() {
       username,
       email
     };
-    setUsers([...users, user]);
+    // deps에서 users 제외하고 함수형 업데이트 적용
+    // setUsers([...users, user]);
+    setUsers(user => users.concat(user));
     setInputs({
       username: '',
       email: ''
     });
     nextId.current += 1;
-  }, [users, username, email]);
+  }, [username, email]);
 
 
   // # 14. 배열 항목 제거
 
   const onRemove = useCallback((id) => {
-    setUsers(users.filter(user => user.id != id));
-  }, [users]);
+    setUsers(users => users.filter(user => user.id !== id));
+  }, []);
 
   
   // # 15. 배열 항목 수정
 
   const onToggle = useCallback(id => {
-    setUsers(
+    setUsers(users =>
       users.map(user => user.id === id ? {...user, active: !user.active} : user)
     );
-  }, [users]);
+  }, []);
 
   // input 값이 변경될 때도 함수가 호출 됨;
   // const count = countActiveUsers(users);
@@ -109,9 +111,11 @@ function App() {
       {/* <Wrapper>
         <Hello name="react" color="red" isSpecial={true} />
         <Hello color="pink" />
-      </Wrapper>
+        </Wrapper>
+        <Counter />
+        <InputSample />
+      */}
       <Counter />
-      <InputSample /> */}
       <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} />
       <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
     </>
