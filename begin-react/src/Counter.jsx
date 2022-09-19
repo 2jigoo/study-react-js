@@ -1,50 +1,44 @@
 import React, { useReducer } from 'react';
+import { Component } from 'react';
 
-function reducer(state, action) {
-    switch (action.type) {
-        case 'INCREMENT':
-            return state + 1;
-        case 'DECREMENT':
-            return state - 1;
-        default:
-            return state;
-    }
-}
+class Counter extends Component {
 
-const Counter = () => {
-    /* 
-    const [number, setNumber] = useState(0);
+    constructor(props) {
+        super(props);
 
-    const onIncrease = () => {
-        // 함수형으로 파라미터를 넘겨주면 상태값을 배치로 처리함
-        // https://medium.com/@baphemot/understanding-reactjs-setstate-a4640451865b
-        // https://reactjs.org/docs/react-component.html#setstate
-        setNumber(prevNumber => prevNumber + 1);
+        this.state = {
+            counter: 0,
+            fixed: 1
+        };
+
+        this.handleIncrease = this.handleIncrease.bind(this);
+        this.handleDecrease = this.handleDecrease.bind(this);
     }
 
-
-    const onDecrease = () => {
-        setNumber(prevNumber => prevNumber - 1);
-    }
-     */
-
-    const [number, dispatch] = useReducer(reducer, 0);
-
-    const onIncrease = () => {
-        dispatch({ type: 'INCREMENT'});
+    handleIncrease = () => {
+        this.setState(state => ({
+            counter: state.counter + 1
+        }), () => { console.log('업데이트 이후 콜백함수'); });
     };
 
-    const onDecrease = () => {
-        dispatch({ type: 'DECREMENT'});
+    handleDecrease = () => {
+        this.setState(state => ({
+            counter: state.counter - 1
+        }));
     }
 
-    return (
-        <div>
-            <h1>{number}</h1>
-            <button onClick={onIncrease}>+1</button>
-            <button onClick={onDecrease}>-1</button>
-        </div>
-    );
+    render() {
+
+        return (
+            <div>
+                <h1>{this.state.counter}</h1>
+                <button onClick={this.handleIncrease}>+1</button>
+                <button onClick={this.handleDecrease}>-1</button>
+                <p>고정된 값: {this.state.fixed}</p>
+            </div>
+        );
+    }
+    
 }
 
 export default Counter;

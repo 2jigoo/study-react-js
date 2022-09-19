@@ -4,6 +4,7 @@ import UserList from "./UserList";
 import CreateUser from "./CreateUser";
 import useInputs from "./hooks/useInputs";
 import produce from "immer";
+import Counter from './Counter';
 
 const countActiveUsers = (users) => {
     return users.filter((user) => user.active).length;
@@ -70,11 +71,14 @@ function App() {
     const count = useMemo(() => countActiveUsers(users), [users]);
 
     return (
-        <UserDispatch.Provider value={dispatch}>
-            <CreateUser />
-            <UserList users={users} />
-            <div>활성사용자 수 : {count}</div>
-        </UserDispatch.Provider>
+        <>
+            <Counter />
+            <UserDispatch.Provider value={dispatch}>
+                <CreateUser />
+                <UserList users={users} />
+                <div>활성사용자 수 : {count}</div>
+            </UserDispatch.Provider>
+        </>
     );
 }
 
