@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
 
-
 class ErrorBoundary extends Component {
-    state = {
-        error: false
-    };
+  state = {
+    error: false,
+  };
 
-    componentDidCatch(error, info) {
-        console.log({
-            error,
-            info
-        });
+  componentDidCatch(error, info) {
+    console.log({
+      error,
+      info,
+    });
 
-        this.setState({
-            error: true
-        });
+    this.setState({
+      error: true,
+    });
+  }
+
+  render() {
+    if (this.state.error) {
+      return <h1>에러 발생</h1>;
     }
 
-    render() {
-        if (this.state.error) {
-            return <h1>에러 발생</h1>;
-        }
-
-        return this.props.children;
-    }
+    return this.props.children;
+  }
 }
 
 export default ErrorBoundary;
