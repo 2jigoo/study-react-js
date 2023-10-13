@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import axios from 'axios'
 
 /*
@@ -7,31 +7,58 @@ import axios from 'axios'
     2. 로딩 상태
     3. 에러
  */
+
+function reducer(state, action) {
+    switch (action.type) {
+        case 'LOADING':
+            return {
+                loading: true,
+                data: null,
+                error: null
+            };
+        case 'SUCCESS':
+            return {
+                loading: false,
+                data: action.data,
+                error: null
+            };
+        case 'ERROR':
+            return {
+                loading: false,
+                data: null,
+                error: action.error
+            };
+        default:
+            throw new Error(`unhandled action type: ${action.type}`);
+    }
+}
+
+
 function Users() {
-    const [users, setUsers] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [state, dispatch] = useReducer(reducer, {
+        loading: false,
+        data: null,
+        error: null,
+    });
 
     const fetchUsers = async () => {
+        dispatch({ type: 'LOADING' });
         try {
-            setError(null);
-            setUsers(null);
-            setLoading(true);
-
             const response = await axios.get(
                 'https://jsonplaceholder.typicode.com/users'
             );
-            setUsers(response.data);
+            dispatch({ type: 'SUCCESS', data: response.data });
         } catch (e) {
-            setError(e);
+            dispatch({ type: 'ERROR', error: e });
         }
-        setLoading(false);
     };
 
     // async 함수를 넘길 수 없기 때문에 내부에서 async 실행
     useEffect(() => {
         fetchUsers();
     }, []);
+
+    const { loading, data: users, error } = state;
 
     if (loading) return <div>로딩중...</div>;
     if (error) return <div>에러가 발생했습니다</div>;
