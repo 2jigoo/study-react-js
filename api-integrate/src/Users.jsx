@@ -1,25 +1,20 @@
 import React, { useState } from 'react';
-import axios from 'axios'
-// import useAsync from './useAsync';
-import { useAsyncRetry } from 'react-use';
+import { useUsersState, useUsersDispatch, getUsers } from './UsersContext';
 import User from './User';
-
-// useAsync에서 Promise의 결과를 바로 data에 담기 때문에
-// 요청 후 response에서 data를 추출하는 함수를 따로 만듦
-async function getUsers() {
-    const response = await axios.get(
-        'https://jsonplaceholder.typicode.com/users'
-    );
-    return response.data;
-}
 
 function Users() {
     const [userId, setUserId] = useState(null);
-    const { value: users, error, loading, retry } = useAsyncRetry(getUsers);
+    const state = useUsersState();
+    const dispatch = useUsersDispatch();
+
+    const { data: users, loading, error } = state.users;
+    const fetchData = () => {
+        getUsers(dispatch);
+    }
 
     if (loading) return <div>로딩중...</div>;
     if (error) return <div>에러가 발생했습니다</div>;
-    if (!users) return <button onClick={retry}>불러오기</button>;
+    if (!users) return <button onClick={fetchData}>불러오기</button>;
 
     return (
         <>
@@ -34,7 +29,7 @@ function Users() {
                     </li>
                 ))}
             </ul>
-            <button onClick={retry}>다시 불러오기</button>
+            <button onClick={fetchData}>다시 불러오기</button>
             { userId && <User id={userId} />}
         </>
     );
