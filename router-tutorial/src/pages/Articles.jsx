@@ -3,6 +3,7 @@ import { Link, Outlet } from "react-router-dom"
 const Articles = () => {
     return (
         <div>
+            {/* Outlet: children 렌더링 */}
             <Outlet />
             <ul>
                 <li>
